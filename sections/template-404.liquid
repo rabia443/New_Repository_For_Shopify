@@ -1,0 +1,60 @@
+<div class="class max-w-md">
+    <div class="text-5xl font-bold my-4">
+       {{ section.settings.title }}
+    </div>
+    <div class="my-4">
+     <p class="text-base md:text-xl leading-normal">
+      {{ section.settings.subtext_title }}
+     </p>
+    </div>
+    <div class="my-4">
+        {% if section.settings.button_url == blank %}{%- comment -%}✅ Button Logic Explanation:- Checks: If the merchant (user) didn’t enter any URL in the theme editor.- If empty: Then it uses the default homepage URL (shop.secure_url). - If filled: Then it uses the custom URL the user added in the theme editor. - Finally, it creates an <a> link using the correct URL and displays the button label. {%- endcomment -%}
+      
+            {% assign shop_url = shop.secure_url %}
+        {% else %}
+            {% assign shop_url = section.settings.button_url%}
+                
+        {% endif %}
+      <a href="{{shop_url  }}" class="px-4 inline py-2 text-base font-medium shadow bg-green-600 hover:bg-green-800 text-white">{{ section.settings.button_label }}</a>
+    </div>
+</div>
+
+
+
+
+{% schema %}
+  {
+    "name": "Template 404",
+    "tag": "section",
+    "class": "flex items-center justify-center text-center py-7 h-screen",
+    "settings": [
+     {
+
+    "type": "text",
+    "id": "title",
+   "default": "404",
+   "label": "404 Heading Title"
+    },
+    {
+    
+        "type": "text",
+        "id": "subtext_title",
+       "default": "The page you're looking for is not found",
+       "label": "404 Subtext Title"
+    },
+    {
+    "type": "text",
+    "id": "button_label",
+    "default":"Back to homepage",
+    "label": "Button Label"
+    },
+    {
+    "type": "url",
+    "id": "button_url",
+    "label": "Button URL"
+    
+    }
+    ],
+   
+  }
+{% endschema %}
