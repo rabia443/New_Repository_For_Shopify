@@ -3,22 +3,23 @@
     <div>
       {% if article.image %}
         <img src="{{ article.image | img_url: 'medium'}}"
-             alt="{{ article.image.alt }}"
-             >
-             
+             alt="{{ article.image.alt }}">
       {% else %}
         {{ 'image' | placeholder_svg_tag: 'w-20' }}
       {% endif %}
+
+      <h1>{{ article.title }}</h1>
+
+      {% if article.excerpt.size > 0 %}
+        <p>{{ article.excerpt | strip_html }}</p>
+      {% else %}
+        <p>{{ article.content | strip_html | truncatewords: 15 }}</p>
+        {%- comment -%}
+          The truncatewords filter in Liquid is used to limit the number of words shown from a longer string (like an article or paragraph), and then adds "..." at the end to show that the text continues.
+        {%- endcomment -%}
+      {% endif %}
     </div>
   {% endfor %}
-  <h1>{{ article.title }}</h1>
-  {% if article.excerpt.size > 0 %}
-  {% else %}
-    <p>{{ article.content | strip_html | truncatewords: 15 }}</p>
-    {%- comment -%}
-      The truncatewords filter in Liquid is used to limit the number of words shown from a longer string (like an article or paragraph), and then adds "..." at the end to show that the text continues.
-    {%- endcomment -%}
-  {% endif %}
 
   {{ paginate | default_pagination }}
 {% endpaginate %}
