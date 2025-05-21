@@ -1,15 +1,14 @@
 {% paginate blog.articles by 3 %}
   {% for article in blog.articles %}
     <div>
-      {%- if article.image -%}
+      {% if article.image %}
         <img src="{{ article.image | img_url: 'medium'}}"
              alt="{{ article.image.alt }}"
-             width="{{ article.image.width }}"
-             height="{{ article.image.height }}">
+             >
              
-      {%- else -%}
+      {% else %}
         {{ 'image' | placeholder_svg_tag: 'w-20' }}
-      {%- endif -%}
+      {% endif %}
     </div>
   {% endfor %}
   <h1>{{ article.title }}</h1>
