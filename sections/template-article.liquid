@@ -1,4 +1,6 @@
-<article class="py-8">
+<article class="py-8" itemscope itemtype="http://schema.org/BlogPosting"> {%- comment -%}
+  itemsscope ka mtlb hy k ye search engine ko btay ga k ye content kis bary me hy or itemtype is liye use kia hy k ye search engine ko btye ga k ye aik article hy is ....so is se search engline ko pta chlyga k article tag m jo kch b hy wo blog post se relates hy 
+{%- endcomment -%}
   {% for block in section.blocks %}
     {% case block.type %}
       {% when 'article_title' %}
@@ -7,7 +9,9 @@
             <a href="{{ blog.url }}" class="text-base uppercase text-gray-500 hover:text-gray-900 font-bold">
               {{- blog.title -}}
             </a>
-            <h1 class="text-4xl md:text-6xl font-medium">
+            <h1 class="text-4xl md:text-6xl font-medium" itemprop="headline">{%- comment -%}
+              ye attribute itemprop SEO ko ye btya ga k ye artcle ka title hy or ye attribute http://schema.org/BlogPosting is website se dekh b skty hen
+            {%- endcomment -%}
               {{ article.title }}
             </h1>
           </div>
@@ -15,9 +19,13 @@
 
       {% when 'article_author' %}
         <div class="flex justify-center items-center">
-          <div class="max-w-7xl text-center">
+          <div class="max-w-7xl text-center" itemscope itemtype="http://schema.org/Person">  {%- comment -%}
+            SEo ko btany k liye k article ka author ik person hy ...hm http://schema.org/Person is website pr ja kr person search kren gy 
+          {%- endcomment -%}
             {% if section.settings.enable_author %}
-              <small>{{ article.author }}</small>
+              <small itemprop="author">{{ article.author }}</small>  {%- comment -%}
+             hm search engine ko bta ry hen k small tag k andr author ka name hy
+            {%- endcomment -%}
             {% endif %}
           </div>
         </div>
@@ -26,7 +34,7 @@
         <div class="flex justify-center items-center">
           <div class="max-wl-7xl text-center">
             {% if section.settings.enable_published_date %}
-              <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+              <time itemprop="datePublished dateCreated" datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
                 {{ article.published_at | date: format: 'on_date' }}
               </time>
             {% endif %}
@@ -35,12 +43,12 @@
 
       {% when 'article_content' %}
         <div class="flex justify-center items-center">
-          <div class="max-w-4xl">
+          <div itemprop="articleBody" class="max-w-4xl">
             {{ article.content }}
           </div>
         </div>
       {% when 'featured_image' %}
-        <div class="max-w-7xl bg-blue-100 rounded-lg mx-2 md:mx-auto overflow-hidden my-4">
+        <div itemprop="image"   class="max-w-7xl bg-blue-100 rounded-lg mx-2 md:mx-auto overflow-hidden my-4">
           {% if article.image != blank %}
             <img
               class="w-full h-80 md:h-96 object-cover object-center"
