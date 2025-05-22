@@ -1,4 +1,4 @@
-{% paginate blog.articles by 3 %}
+{% paginate blog.articles by section.settings.number_of_blog_posts %}
   {% for article in blog.articles %}
     <div>
       {% if article.image %}
@@ -23,3 +23,32 @@
 
   {{ paginate | default_pagination }}
 {% endpaginate %}
+{% schema %}
+  {
+    "name": "Blog",
+    "settings": [
+      {
+      "type": "range",
+      "id": "number_of_blog_post",
+      "step": 1,
+      "min": 1,
+      "max": 6,
+      "label": "Blog Posts Per Page",
+      "default": 3
+
+      }
+    ],
+    "presets": [
+      {
+        "name": "",
+        "settings": {
+        }
+      }
+    ]
+  }
+{% endschema %}
+
+
+{%- comment -%}
+  range means theme editor me aik setting hogi k user range select kr sky k wo aik page pr kitny article show krwana chahata h jo hm paginate tag m pass krden gy means jo user select kryga utny e articles show hongy per page
+{%- endcomment -%}
