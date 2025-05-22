@@ -44,7 +44,9 @@
       </div>
     </div>
 
-    {{ paginate | default_pagination }}
+   <div class="max-w-6xl mz-auto">
+    {% render 'pagination', pagination : paginate%}
+   </div>
   {% endpaginate %}
 </div>
 

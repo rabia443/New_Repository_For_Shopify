@@ -58,7 +58,6 @@
               class="w-full h-80 md:h-96 object-cover object-center"
               src="{{ article.image | img_url: 'large' }}"
               alt="{{ article.image.alt }}"
-             
             >
 
           {% else %}
@@ -85,11 +84,15 @@
               <p class="text-small">{{ comment.content }}</p>
             </div>
           {% endfor %}
-          {% if paginate.pages > 1 %}
-            {{ paginate | default_pagination }}
-          {% endif %}
-
-          {{ paginate | default_pagination }}
+          <div class="max-w-6xl mx-auto">
+            {% render 'pagination', pagination: paginate %}
+            {%- comment -%}
+              Is line ka matlab hai:
+              - Snippets folder mein jo pagination.liquid file hai, usko yahaan include karo.
+              - Aur paginate object ka data us file ko bhej do ..paginate object data me paginate object k kch properties a jati hen jesy pagination.page_size,pagination.previous etc ...snippet file me hm direct paginate object use ni kr skty  k ye non-global object hy or snippet file ko is ky bary me kch pta ni ........pagination.liuid file me is object ko  'pagination' naam se use kiya jayega.
+              Is tarah hum custom pagination design use kar sakte hain alag se likhi hui pagination.liquid file ke zariye.
+            {%- endcomment -%}
+          </div>
         {% endpaginate %}
       </div>
     {% else %}
@@ -209,75 +212,74 @@
     }
 </script>
 {% comment %}
-🔸 Line-by-line Explanation of JSON-LD Blog Schema:
+  🔸 Line-by-line Explanation of JSON-LD Blog Schema:
 
-<script type="application/ld+json">  
-✅ Purpose:  
-Ye <script> tag batata hai ke hum JSON-LD (JavaScript Object Notation for Linked Data) use kar rahe hain — Google aur other search engines ke liye structured data.  
-🧠 Google uses this to read your page content in a smart way.
+  <script type="application/ld+json">
+  ✅ Purpose:
+  Ye <script> tag batata hai ke hum JSON-LD (JavaScript Object Notation for Linked Data) use kar rahe hain — Google aur other search engines ke liye structured data.
+  🧠 Google uses this to read your page content in a smart way.
 
-"@context": "http://schema.org",  
-✅ Purpose:  
-Ye batata hai ke hum Schema.org vocabulary use kar rahe hain. Schema.org ek standard hai jo search engines follow karte hain.  
-🧠 Without this, Google won’t know how to understand the tags.
+  "@context": "http://schema.org",
+  ✅ Purpose:
+  Ye batata hai ke hum Schema.org vocabulary use kar rahe hain. Schema.org ek standard hai jo search engines follow karte hain.
+  🧠 Without this, Google won’t know how to understand the tags.
 
-"@type": "BlogPosting",  
-✅ Purpose:  
-Hum define kar rahe hain ke ye page ek blog post hai.  
-📌 Agar ye product page hota to @type: "Product" hota.
+  "@type": "BlogPosting",
+  ✅ Purpose:
+  Hum define kar rahe hain ke ye page ek blog post hai.
+  📌 Agar ye product page hota to @type: "Product" hota.
 
-"headline": {{ article.title | json }},  
-✅ Value Source: article.title → Shopify blog post ka title.  
-✅ Purpose: Google ko batata hai ke blog ka heading ya title kya hai (e.g., "Winter Fashion Tips").  
-🧠 Search result me title dikhane ke liye helpful.
+  "headline": {{ article.title | json }},
+  ✅ Value Source: article.title → Shopify blog post ka title.
+  ✅ Purpose: Google ko batata hai ke blog ka heading ya title kya hai (e.g., "Winter Fashion Tips").
+  🧠 Search result me title dikhane ke liye helpful.
 
-"articleBody": {{ article.content | strip_html | json }},  
-✅ Value Source: article.content → Blog ka full text.  
-🧽 strip_html → HTML tags hata deta hai.  
-✅ Purpose: Google ko batata hai blog me kya content likha gaya hai.  
-🧠 Helpful for content analysis & SEO.
+  "articleBody": {{ article.content | strip_html | json }},
+  ✅ Value Source: article.content → Blog ka full text.
+  🧽 strip_html → HTML tags hata deta hai.
+  ✅ Purpose: Google ko batata hai blog me kya content likha gaya hai.
+  🧠 Helpful for content analysis & SEO.
 
-{% if article.excerpt != blank %}  
-  "description": {{ article.excerpt | strip_html | json }},  
-{% endif %}  
-✅ Value Source: article.excerpt → Short summary of blog.  
-✅ Purpose: Google ko short meta description milti hai jo search results me dikh sakti hai.
+  {% if article.excerpt != blank %}
+    "description": {{ article.excerpt | strip_html | json }},
+  {% endif %}
+  ✅ Value Source: article.excerpt → Short summary of blog.
+  ✅ Purpose: Google ko short meta description milti hai jo search results me dikh sakti hai.
 
-{% if article.image %}  
-  "image": [  
-    {{ article.image | image_url: "medium" | prepend: 'https:' | json }}  
-  ],  
-{% endif %}  
-✅ Value Source: article.image → Blog post ki featured image.  
-image_url: "medium" → Medium size image.  
-prepend: 'https:' → Secure URL bana raha hai.  
-✅ Purpose: Google ko blog ki image milti hai jo search result me ya Google Discover me show ho sakti hai.
+  {% if article.image %}
+    "image": [
+      {{ article.image | image_url: "medium" | prepend: 'https:' | json }}
+    ],
+  {% endif %}
+  ✅ Value Source: article.image → Blog post ki featured image.
+  image_url: "medium" → Medium size image.
+  prepend: 'https:' → Secure URL bana raha hai.
+  ✅ Purpose: Google ko blog ki image milti hai jo search result me ya Google Discover me show ho sakti hai.
 
-"datePublished": {{ article.published_at | date: format: 'default' | json }},  
-✅ Value Source: article.published_at → Blog post kab publish hua.  
-✅ Purpose: Google ye samajhta hai ke blog kab post hua, taake time-sensitive results me dikhaye.
+  "datePublished": {{ article.published_at | date: format: 'default' | json }},
+  ✅ Value Source: article.published_at → Blog post kab publish hua.
+  ✅ Purpose: Google ye samajhta hai ke blog kab post hua, taake time-sensitive results me dikhaye.
 
-"dateCreated": {{ article.created_at | date: format: 'default' | json }},  
-✅ Value Source: article.created_at → Jab blog Shopify me pehli baar banaya gaya tha.  
-✅ Purpose: Google ko original creation date milti hai.
+  "dateCreated": {{ article.created_at | date: format: 'default' | json }},
+  ✅ Value Source: article.created_at → Jab blog Shopify me pehli baar banaya gaya tha.
+  ✅ Purpose: Google ko original creation date milti hai.
 
-"author": {  
-  "@type": "Person",  
-  "name": {{ article.author | json }}  
-},  
-✅ Value Source: article.author → Shopify blog post ka author name.  
-✅ Purpose: Google ko batata hai blog kis ne likha.  
-🧠 Helpful for E-A-T (Expertise, Authoritativeness, Trustworthiness).
+  "author": {
+    "@type": "Person",
+    "name": {{ article.author | json }}
+  },
+  ✅ Value Source: article.author → Shopify blog post ka author name.
+  ✅ Purpose: Google ko batata hai blog kis ne likha.
+  🧠 Helpful for E-A-T (Expertise, Authoritativeness, Trustworthiness).
 
-"publisher": {  
-  "@type": "Organization",  
-  "name": {{ shop.name | json }}  
-}  
-✅ Value Source: shop.name → Shopify store ka naam.  
-✅ Purpose: Google ko batata hai ke kis organization ne blog publish kiya.  
-🧠 Helpful for brand authority & trust in search.
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ shop.name | json }}
+  }
+  ✅ Value Source: shop.name → Shopify store ka naam.
+  ✅ Purpose: Google ko batata hai ke kis organization ne blog publish kiya.
+  🧠 Helpful for brand authority & trust in search.
 {% endcomment %}
-
 
 {% schema %}
 {
