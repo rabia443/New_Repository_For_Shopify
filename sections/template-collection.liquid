@@ -1,9 +1,46 @@
-{% paginate collection.products by 6 %}
-  {% for product in collection.products %}
-    <a href="{{ product.url }}">{{ product.title }}</a>
-  {% else %}
-    <p>There are no products inside of this collection</p>
-  {% endfor %}
+<div class="px-4 py-8">
+  {% paginate collection.products by section.settings.number_of_products_per_page %}
+    <h1 class="text-3xl text-center">
+      {{ collection.title }}
+    </h1>
+    <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {% for product in collection.products %} 
+                {%- render 'product-card' , product: product -%} {%- comment -%}
+                iska mtlb hy k right side wala product variable is file se product-card snippet file ko send hoga  jo hame for loop se mil rha hy uski value hm left side waly product ko pass kr rhy hen q k dosri file me woi use hona hy name
+                or jo left side pr product hy uska mtlb hy k snippet file me b uska name product e rkhna hy ...hm isy chnge b rkh skty hen name phr jo name 
+                rkhen gy woi use krna h snippet file me
+              {%- endcomment -%}
+                
+              {% else %}
+                <p>There are no products inside of this collection</p>
+              {% endfor %}
+        </div>
+    </div>
+  
 
-  {% render 'pagination' , pagination: paginate %}
-{% endpaginate %}
+    {% render 'pagination', pagination: paginate %}
+  {% endpaginate %}
+</div>
+{% schema %}
+  {
+    "name": "Template Collection",
+    "settings": [
+      {
+    "type": "number",
+    "id": "number_of_products_per_page",
+    "default": 6,
+    "label": "Number of products per page"
+
+    },
+    {
+    "type": "checkbox",
+    "default":true,
+    "label": "Show vendor",
+    "id": "show_or_hide_vendor_name"
+    
+    }
+    ]
+   
+  }
+{% endschema %}
