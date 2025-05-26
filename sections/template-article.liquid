@@ -103,32 +103,31 @@
     {% form 'new_comment', article %}
       <div class="flex-1 mx-auto items-center justify-center max-w-4xl px-4">
         {% if form.errors %}
-          <div class="order p-5">
-            <div class="flex flex-row items-start w-full my-3">
-              <div class="flex items-center">
-                <div class="text-red-500">{% render 'icon-failed' %}</div>
-                <div class="text-sm font-medium ml-3 text-black">Oh no! Your comment was not posted</div>
+          <div class="border p-5">
+              <div class="flex flex-row items-center w-full my-3">
+                  <div class="text-red-500">
+                      {% render 'icon-failed' %}
+                  </div>
+                  <div class="text-sm font-medium ml-3">
+                      Oh no! Your comment was not posted
+                  </div>
               </div>
-            </div>
-            <ul class="px-4 mb-3 ml-7 list-decimal text-red-500">
-              {% for error in form.errors %}
-                <li>
-                  <span>{{ form.errors.messages[error] }}</span>
-                </li>
-              {% endfor %}
-            </ul>
+              <ul class="px-4 mb-3 ml-7 list-decimal">
+                  {% for error in form.errors %}
+                      <li>
+                          <span>{{ form.errors.messages[error] }}</span>
+                      </li>
+                  {% endfor %}
+              </ul>
           </div>
-
-        {% elsif form.posted_successfully? %}
-          <div class="flex items-center w-full my-3 p-5">
-            <div class="flex items-center">
+      {% elsif form.posted_successfully? %}
+          <div class="flex flex-row items-center w-full my-3 p-5">
               <div class="text-green-500">
-                {% render 'icon-success' %}
+                  {% render 'icon-success' %}
               </div>
-              <div class="text-sm font-medium ml-3 text-black">Your comment posted successfully!</div>
-            </div>
+              <div class="text-sm font-medium ml-3">Comment is posted successfully</div>
           </div>
-        {% endif %}
+      {% endif %}
 
         <!-- Grid container for input fields -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
