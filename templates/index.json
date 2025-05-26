@@ -3,7 +3,11 @@
 "sections":{
 "featured-collection":{
 
-    "type":"featured-collections"
+    "type":"featured-collections",
+    "settings":{
+
+        "featured-collection":"all"
+    }
 }
 
 
