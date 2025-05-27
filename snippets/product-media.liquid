@@ -1,0 +1,21 @@
+{% case media.media_type %}
+{% when 'image' %}
+    <img src="{{ media | img_url: 'large' }}" alt="{{ media.preview_image.alt }}" class="w-full h-full object-cover">
+
+{% when 'external_video' %}
+    {{ media | external_video_tag: class: 'w-full h-80 object-cover' }}
+
+{% when 'video' %}
+    {{ media | video_tag: controls: true, class: 'w-full h-full object-cover' }} {%- comment -%}
+      ye controls attribute hmny is liye use kia hy k agr ye ni kren gy to video ka na hi play button show hoga or na hi koi or option .video aik image ki tarh show hogi
+    {%- endcomment -%}
+
+{% when 'model' %}
+    {{ media | model_viewer_tag }}
+
+{% else %}
+    {{ media | media_tag }}
+
+{% else %}
+    
+{% endcase %}
