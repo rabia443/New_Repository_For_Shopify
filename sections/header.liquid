@@ -1,179 +1,221 @@
-{% assign main_menu_linklist = linklists[section.settings.menu].links %} {%- comment -%}User ne theme editor se dropdown se  jo menu select kiya hai (section.settings.menu),us menu ka data Shopify ke linklist object se uthao,aur usay main_menu_linklist variable mein save karo or links Yeh us menu ke actual list of links (items) ko return karta hai, jaise Home, Products, Contact etc. agr user ne main menu select kiya hy to ot agr footer menu select kia hy to usky sary links return kryga{%- endcomment -%}
+{% assign main_menu_linklist = linklists[section.settings.menu].links %}
+{%- comment -%}User ne theme editor se dropdown se  jo menu select kiya hai (section.settings.menu),us menu ka data Shopify ke linklist object se uthao,aur usay main_menu_linklist variable mein save karo or links Yeh us menu ke actual list of links (items) ko return karta hai, jaise Home, Products, Contact etc. agr user ne main menu select kiya hy to ot agr footer menu select kia hy to usky sary links return kryga{%- endcomment -%}
 
-{%- comment -%} {{ shop.customer_accounts_enabled }} {%- endcomment -%} {% comment %}{{ shop.customer_accounts_enabled }}Ye attribute Shopify Liquid ke `shop` object ka part hai.Iska path hai: https://shopify.dev/docs/api/liquid/objects/shopYe check karta hai ke customer accounts store mein enabled hain ya nahi.Agar true return kare to iska matlab hai ke customers ko purchase karne se pehle account banana hoga (agar settings mein "Accounts are required" selected hai).Agar false return kare to customers bina account banaye checkout kar sakte hain (guest checkout allowed hoga).agy hm condition lgyen gy k agr customer ccounts enbled truee hy to hi regitser and login k links show kry othwise ni {% endcomment %}
+{%- comment -%} {{ shop.customer_accounts_enabled }} {%- endcomment -%}
+{% comment %}{{ shop.customer_accounts_enabled }}Ye attribute Shopify Liquid ke `shop` object ka part hai.Iska path hai: https://shopify.dev/docs/api/liquid/objects/shopYe check karta hai ke customer accounts store mein enabled hain ya nahi.Agar true return kare to iska matlab hai ke customers ko purchase karne se pehle account banana hoga (agar settings mein "Accounts are required" selected hai).Agar false return kare to customers bina account banaye checkout kar sakte hain (guest checkout allowed hoga).agy hm condition lgyen gy k agr customer ccounts enbled truee hy to hi regitser and login k links show kry othwise ni {% endcomment %}
 
+<div class="relative bg-white" x-data="{ mobileMenuOpen: false, searchBarOpen: false }">
+  {%- comment -%}
+    by defaullt search bar open ni honi chiye or na hi mobile menu initialy open hona chiyw
+  {%- endcomment -%}
+  <div class="mx-auto px-4 sm:px-6">
+    <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
+      <!-- STORE NAME / STORE LOGO -->
+      <div class="flex justify-start lg:flex-1 truncate">
+        <h1 class="text-xl font-bold truncate">{{ shop.name }}</h1>
+      </div>
 
+      <div class="-mr-2 -my-2 ml-3 md:hidden">
+        <button
+          x-on:click="mobileMenuOpen =true "
+          type="button"
+          class="bg-white p-2 inline-flex items-center justify-center focus:outline-none"
+        >
+          {% render 'icon-menu' %}
+        </button>
+      </div>
 
+      <!-- NAVIGATION MENU -->
+      <nav x-data="{ open: false }" class="hidden md:flex space-x-10">
+        {% comment %} when page loads then bydefault it not sows the dropdown  {% endcomment %}
+        {% for link in main_menu_linklist %}
+          {% if link.links != blank %}
+            {% comment %} this btn will only shows when a link has sublinks or submenus inside it  {% endcomment %}
 
-<div class="relative bg-white" x-data="{ mobileMenuOpen: false }">
-    <div class="mx-auto px-4 sm:px-6">
-      <div class="flex justify-between items-center py-6 md:justify-start md:space-x-10">
-        <!-- STORE NAME / STORE LOGO -->
-        <div class="flex justify-start lg:flex-1 truncate">
-          <h1 class="text-xl font-bold truncate">{{ shop.name }}</h1>
+            <div class="relative">
+              <button
+                x-on:click="open = ! open"
+                type="button"
+                class="inline-flex items-center text-base text-gray-500 hover:text-gray-900"
+              >
+                {% comment %} means somone when clcik on dropdown icon only then dropdown should open because open variable value now set to open which was previosuly false  {% endcomment %}
+                {{ link.title }}
+                {% render 'icon-dropdown' %}
+              </button>
+              <div
+                x-show="open"
+                @click.away="open = false"
+                class="absolute z-10 -ml-5 mt-5 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2"
+              >
+                {% comment %} it means that show the dropdown based on the valuw of open variable and in second it says that when user clciks anywhere outside this header dropdown container then the va;ue of open varible should be false  {% endcomment %}
+                <div class="shadow-lg border ring-black ring-opacity-5 overflow-hidden rounded-lg">
+                  <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                    {%- for childlink in link.links %}
+                      <a href="{{childlink.url}}" class="-m-3 p-3 flex items start rounded-lg hover:bg-gray-100">
+                        <div class="ml-4">
+                          <p class="text-gray-900 text-base font-medium">
+                            {{ childlink.title }}
+                          </p>
+                        </div>
+                      </a>
+                    {%- endfor -%}
+                    <!-- CREATE THE SUBLINK -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="relative">
+              <a href="{{ link.url }}" class="text-base text-gray-500 hover:text-gray-900">{{ link.title }}</a>
+            </div>
+          {%- endif -%}
+        {% endfor %}
+      </nav>
+
+      <div class="hidden md:flex items-center justify-end md:flex-1 space-x-5">
+        <button
+          x-on:click="searchBarOpen = true"
+          type="button"
+          class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900"
+        >
+          {% render 'icon-search' %}
+        </button>
+        <a href="{{ routes.cart_url }}" class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900">
+          {% render 'icon-shopping-bag' %}
+        </a>
+        {% if shop.customer_accounts_enabled %}
+          {% if customer %}
+            <a href="{{ routes.account_url }}" class="text-base text-gray-500 hover:text-gray-900">account</a>
+            {{
+              'Log out'
+              | customer_logout_link
+              | replace: '<a', '<a class="text-base text-gray-500 hover:text-gray-900"'
+            }}
+          {% else %}
+            {{
+              'Log in '
+              | customer_login_link
+              | replace: '<a', '<a class="text-base text-gray-500 hover:text-gray-900"'
+            }}
+            {{
+              'Register'
+              | customer_register_link
+              | replace: '<a', '<a class="text-base text-gray-500 hover:text-gray-900"'
+            }}
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div x-show="mobileMenuOpen" class="absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden">
+    <div class="shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 bg-white w-full">
+      <div class="p-5 divide-y-2 divide-gray-50">
+        <!-- MOBILE MENU HEADER TITLE PLUS CLOSE BUTTON -->
+        <div class="flex items-center justify-between pb-3">
+          <div>
+            <h1 class="text-lg text-gray-500">{{ section.settings.mobile_menu_title }}</h1>
+            {% comment %} means that when an admin or any person types a title in theme editor like main-menu ,navigation are store in this etc    {% endcomment %}
+          </div>
+          <div class="-mr-2">
+            <button x-on:click="mobileMenuOpen = false" type="button" class="bg-white rounded-md p-2 text-gray-500">
+              {% comment %} it means that when this btn will clcik means when someone clcik on cross icon then mobile menu should hide{% endcomment %}
+              {% render 'icon-close' %}
+            </button>
+          </div>
         </div>
 
-        <div class="-mr-2 -my-2 ml-3 md:hidden">
-          <button x-on:click="mobileMenuOpen =true " type="button" class="bg-white p-2 inline-flex items-center justify-center focus:outline-none">
-              {% render 'icon-menu'%}
-          </button>
-      </div>
-  
-        <!-- NAVIGATION MENU -->
-        <nav x-data="{ open: false }" class="hidden md:flex space-x-10"> {% comment %} when page loads then bydefault it not sows the dropdown  {% endcomment %}
-        {% for link in main_menu_linklist %}
-            {% if link.links!=blank %} {% comment %} this btn will only shows when a link has sublinks or submenus inside it  {% endcomment %}
-
-                <div class="relative">
-                    <button x-on:click="open = ! open" type="button" class="inline-flex items-center text-base text-gray-500 hover:text-gray-900"> {% comment %} means somone when clcik on dropdown icon only then dropdown should open because open variable value now set to open which was previosuly false  {% endcomment %}
-                    {{ link.title }}
-                    {% render 'icon-dropdown'%}
-                    </button>   
-                    <div x-show="open" @click.away="open = false" class="absolute z-10 -ml-5 mt-5 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">{% comment %} it means that show the dropdown based on the valuw of open variable and in second it says that when user clciks anywhere outside this header dropdown container then the va;ue of open varible should be false  {% endcomment %}
-                        <div class="shadow-lg border ring-black ring-opacity-5 overflow-hidden rounded-lg">
-                          <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                      {%- for childlink in link.links%}
-                        <a href="{{childlink.url}}" class="-m-3 p-3 flex items start rounded-lg hover:bg-gray-100">
-                            <div class="ml-4">
-                              <p class="text-gray-900 text-base font-medium">
-                              {{ childlink.title }}
-                              </p>
-                            </div>
-                          </a>
-                        
-                      {%- endfor -%}
-                            <!-- CREATE THE SUBLINK -->
-                            
-                      
-                            
-                      
-                          </div>
-                        </div>
-                      </div>  
+        <!-- NAVIGATION LINKS FOR MOBILE MENU -->
+        <div class="pt-3">
+          <nav class="grid gap-y-7">
+            {% for link in main_menu_linklist %}
+              {% comment %} This loops through all the menu links which was selected by user for header menus if main menu then its links (like Home, About, Contact, etc.) These links were stored in main_menu_linklist earlier. {% endcomment %}
+              {% assign link_handle = link.handle | replace: '-', '_' -%}
+              {% comment %} there are link handle of each link present in shopify likr about-us for About page our-services for Service page but alpanie.js not support dashes (-)in link handle so we should replace dashes with underscore(_) {% endcomment %}
+              {% if link.links != blank %}
+                <div x-data="{ {{ link_handle }} : false  }" class="relative">
+                  {% comment %} if any link has sublink then by defualt it not shows the dropdown {% endcomment %}
+                  <button
+                    x-on:click="{{ link_handle }}=!{{ link_handle }}"
+                    type="button"
+                    class="text-base text-gray-500 hover:text-gray-900 flex items-center justify-between w-full"
+                  >
+                    {% comment %} when this button is clciked then value changes from false to true or true to false   {% endcomment %}
+                    <div>{{ link.title }}</div>
+                    {% render 'icon-dropdown' %}
+                  </button>
+                  <div x-show:="{{ link_handle }}" class="grid gap-y-7 py-3">
+                    {% for childlink in link.links %}
+                      <a
+                        href="#"
+                        class="-m-3 p-3 mt-2 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                      >
+                        <span class="ml-3 text-base font-medium text-gray-500">{{ childlink.title }}</span>
+                      </a>
+                    {% endfor %}
+                  </div>
                 </div>
-            {% else %}
-                <div class="relative">
-                    <a href="{{ link.url }}" class="text-base text-gray-500 hover:text-gray-900">{{ link.title }}</a>
-                   </div>
-            {%- endif -%}
-               
-        {% endfor %}
-          
-  
-          
-  
-         
-        </nav>
-  
-        <div class="hidden md:flex items-center justify-end md:flex-1 space-x-5">
-          <a href="{{ routes.cart_url }}" class="whitespace-nowrap text-base text-gray-500 hover:text-gray-900">
-            {% render 'icon-shopping-bag' %}
-          </a>
-    {% if shop.customer_accounts_enabled%}
-          <a href="{{ routes.account_login_url  }}" class="text-gray-500 hover:text-gray-900">Login</a>
-          <a href="{{ routes.account_register_url  }}" class="text-base text-gray-500 hover:text-gray-900">Register</a>
-    {%- endif -%}
-
-
-
-          
+              {% else %}
+                <a
+                  href="#"
+                  class="-m-3 p-3 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                >
+                  {{ link.title }}
+                </a>
+              {%- endif -%}
+            {%- endfor -%}
+          </nav>
         </div>
       </div>
     </div>
-
-    <div x-show="mobileMenuOpen" class="absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden">
-      <div class="shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 bg-white w-full">
-          <div class="p-5 divide-y-2 divide-gray-50">
-  
-              <!-- MOBILE MENU HEADER TITLE PLUS CLOSE BUTTON -->
-              <div class="flex items-center justify-between pb-3">
-                  <div>
-                      <h1 class="text-lg text-gray-500">{{ section.settings.mobile_menu_title }}</h1>{% comment %} means that when an admin or any person types a title in theme editor like main-menu ,navigation are store in this etc    {% endcomment %}
-                  </div>
-                  <div class="-mr-2">
-                      <button x-on:click="mobileMenuOpen = false" type="button" class="bg-white rounded-md p-2 text-gray-500">{% comment %} it means that when this btn will clcik means when someone clcik on cross icon then mobile menu should hide{% endcomment %}
-                          {% render 'icon-close'%}
-                      </button>
-                  </div>
-              </div>
-  
-              <!-- NAVIGATION LINKS FOR MOBILE MENU -->
-              <div class="pt-3">
-                  <nav class="grid gap-y-7">
-                    {% for link in main_menu_linklist%} {% comment %} This loops through all the menu links which was selected by user for header menus if main menu then its links (like Home, About, Contact, etc.) These links were stored in main_menu_linklist earlier. {% endcomment %}
-                      {% assign link_handle = link.handle | replace: '-', '_'%}{% comment %} there are link handle of each link present in shopify likr about-us for About page our-services for Service page but alpanie.js not support dashes (-)in link handle so we should replace dashes with underscore(_) {% endcomment %}
-                      {% if link.links != blank %}
-                        <div x-data="{ {{ link_handle }} : false  }" class="relative">{% comment %} if any link has sublink then by defualt it not shows the dropdown {% endcomment %}
-                          <button x-on:click ="{{ link_handle }}=!{{ link_handle }}" type="button" class="text-base text-gray-500 hover:text-gray-900 flex items-center justify-between w-full">{% comment %} when this button is clciked then value changes from false to true or true to false   {% endcomment %}
-                              <div>{{ link.title }}</div>
-                              {% render 'icon-dropdown'%}
-                          </button>
-                    <div x-show:="{{ link_handle }}"  class="grid gap-y-7 py-3">
-                      {% for childlink in link.links %}
-                       
-                        <a href="#" class="-m-3 p-3 mt-2 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50">
-                            <span class="ml-3 text-base font-medium text-gray-500">{{ childlink.title }}</span>
-                        </a>
-                    
-                 {% endfor %}
-                    </div>
-                        
-                          
-                      </div>
-                        {% else %}
-                          
-                          <a href="#" class="-m-3 p-3 flex items-center rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-50">
-                          {{ link.title }}
-                        </a>
-                      {%- endif -%}
-                    {%- endfor -%}
-  
-                     
-  
-                     
-  
-                      
-                  </nav>
-              </div>
-          </div>
-      </div>
-  </div>
   </div>
 
+  <div x-show="searchBarOpen" class="w-full absolute top-0 bg-white border">
+    <button type="button" x-on:click="searchBarOpen = false" class="absolute top-0 right-0 mr-5 mt-5 text-gray-500">
+      {% render 'icon-close' %}
+    </button>
+    <div class="h-40 flex justify-center items-center">
+      <form action="{{ routes.search_url }}" method="get" class="flex-auto">
+        <div class="relative text-gray-500 px-10 border">
+          <input
+            type="search"
+            name="q"
+            placeholder="Search"
+            class="w-full bg-white h-10 px-5 pr-10 rounded-full text-sm focus:outline-none"
+          >
+          <button type="submit" class="absolute right-0 top-0 mt-2 mr-2 md:mr-20">
+            {% render 'icon-search' %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "mobile_menu_title",
+      "label": "Title",
+      "default": "Menu",
+      "info": "This is the title of the mobile menu window"
+    },
 
-  {% schema %}
-  {
-    "name": "Header",
-    "settings": [
-      {
-        "type": "text",
-        "id": "mobile_menu_title",
-        "label": "Title",
-        "default": "Menu",
-        "info": "This is the title of the mobile menu window"
-      },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Header Menu"
+    }
+  ]
+}
+{% endschema %}
 
-      {
-        "type": "link_list",
-        "id": "menu",
-       "default": "main-menu",
-       "label": "Header Menu"
-
-      
-      }
-    ]
-   
-  }
-  {% endschema %}
-  
-
-
-
- {% comment %}1. in settings the type means What kind of input it is (text, image, checkbox, radio etc.) usky bd id ka mtlb hy k jo textbox m user koi b value mean name dega mobile menu title wo store hoga or by default input box m name Menu show hoga jisko user edit kr skta hy  {% endcomment %}
-  {% comment %}
- 2. Ye code theme editor mein ek dropdown show karega jahan user apne store ke menus (navigation) mein se ek choose kar sakta hai, 
-  jo “Header Menu” ke liye use hoga.
+{% comment %}1. in settings the type means What kind of input it is (text, image, checkbox, radio etc.) usky bd id ka mtlb hy k jo textbox m user koi b value mean name dega mobile menu title wo store hoga or by default input box m name Menu show hoga jisko user edit kr skta hy  {% endcomment %}
+{% comment %}
+  2. Ye code theme editor mein ek dropdown show karega jahan user apne store ke menus (navigation) mein se ek choose kar sakta hai,
+   jo “Header Menu” ke liye use hoga.
 {% endcomment %}
-  
- 
