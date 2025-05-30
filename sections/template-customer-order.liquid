@@ -11,7 +11,9 @@
     </div>
 
     <div>
-        {% for line_item in order.line_items %}
+        {% for line_item in order.line_items %} {%- comment -%}
+          line_items means list of all itmes/product purchased
+        {%- endcomment -%}
             <div class="w-full border border-gray-200 divide-y rounded-sm mb-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-12 p-4 md:p-12">
                     <div class="w-full h-80 min-h-80 bg-gray-200 rounded-md overflow-hidden border border-gray-200">
@@ -67,7 +69,9 @@
                 <div class="p-4 md:p-12">
                     <h1 class="text-lg font-medium mb-4">Fulfillment</h1>
 
-                    {% if line_item.successfully_fulfilled_quantity > 0 %}
+                    {% if line_item.successfully_fulfilled_quantity > 0 %} {%- comment -%}
+                      iska mtlb k agr customer ny 5 watches order ki hen means quantity 5 hy lekin hmry store m just 3 pri hen to succesfully_fulfilled_quantity me 3 ayga 
+                    {%- endcomment -%}
                         <p class="mb-2">We have fulfilled {{ line_item.successfully_fulfilled_quantity }} items of your recent order.</p>
                         <p class="mb-2">Tracking company: {{ line_item.fulfillment.tracking_company }}</p>
                         <p class="mb-2">Tracking number: {{ line_item.fulfillment.tracking_number }}</p>
