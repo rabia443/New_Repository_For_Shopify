@@ -98,7 +98,7 @@
                     <select 
                         name="address[province]" 
                         id="address_province_{{ form.id }}"
-                        value="{{ form.province }}"
+                        data-selected-province="{{ form.province }}"
                         class="w-full text-gray-700 border border-gray-200 px-4 py-3 focus:outline-none"
                     >
                     </select>
@@ -246,7 +246,7 @@
                                         <select 
                                             name="address[province]" 
                                             id="address_province_{{ form.id }}"
-                                            value="{{ form.province }}"
+                                           data-selected-province="{{ form.province }}"
                                             class="w-full text-gray-700 border border-gray-200 px-4 py-3 focus:outline-none"
                                         >
                                         </select>
@@ -289,7 +289,7 @@
     </div>
 </div>
 
-{% comment %} <div class="fixed inset-0 bg-[rgba(75,85,99,0.5)] z-50" hello worl></div> {% endcomment %}
+
 
 <script>
     class CustomerAddress {
@@ -324,8 +324,10 @@
                 var options = '';
                 for(var index = 0; index < arrayOfProvince.length; index++) {
                     if(arrayOfProvince[index][0] === provinceSelector.getAttribute('value')) {
+                       
                         options += `<option value="${arrayOfProvince[index][0]}" selected>${arrayOfProvince[index][0]}</option>`;
                     } else {
+                       
                         options += `<option value="${arrayOfProvince[index][0]}">${arrayOfProvince[index][0]}</option>`;
                     }
                 }
@@ -379,4 +381,5 @@
     }
 
     const customerAddress = new CustomerAddress();
-</script>
+    </script>
+    
