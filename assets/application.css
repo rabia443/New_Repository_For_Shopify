@@ -666,6 +666,9 @@
   .border-red-400 {
     border-color: var(--color-red-400);
   }
+  .bg-\[rgba\(75\,85\,99\,0\.5\)\] {
+    background-color: rgba(75,85,99,0.5);
+  }
   .bg-blue-100 {
     background-color: var(--color-blue-100);
   }
