@@ -4,7 +4,7 @@
 {%- comment -%} {{ shop.customer_accounts_enabled }} {%- endcomment -%}
 {% comment %}{{ shop.customer_accounts_enabled }}Ye attribute Shopify Liquid ke `shop` object ka part hai.Iska path hai: https://shopify.dev/docs/api/liquid/objects/shopYe check karta hai ke customer accounts store mein enabled hain ya nahi.Agar true return kare to iska matlab hai ke customers ko purchase karne se pehle account banana hoga (agar settings mein "Accounts are required" selected hai).Agar false return kare to customers bina account banaye checkout kar sakte hain (guest checkout allowed hoga).agy hm condition lgyen gy k agr customer ccounts enbled truee hy to hi regitser and login k links show kry othwise ni {% endcomment %}
 
-<div class="relative bg-white" x-data="{ mobileMenuOpen: false, searchBarOpen: false }">
+<div class="relative bg-white" x-data="{ mobileMenuOpen: false, searchBarOpen: false }" x-cloak>
   {%- comment -%}
     by defaullt search bar open ni honi chiye or na hi mobile menu initialy open hona chiyw
   {%- endcomment -%}
