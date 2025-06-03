@@ -1,3 +1,17 @@
+{% liquid
+  if section.settings.menu.links == blank
+    assign main_menu_linklist = linklists[section.settings.menu].links
+  else
+    assign main_menu_linklist = section.settings.menu.links
+  endif
+%}
+{% comment %}
+  Yeh block check karta hai ke menu links direct `section.settings.menu.links` se mil rahe hain ya nahi.
+  Agar blank ho to `linklists` se (purane tareeqe se) links assign kiye jaate hain.
+  Warna direct `section.settings.menu.links` use kiya jaata hai.
+  Is se theme naye aur purane dono menu structures ko support karti hai.
+{% endcomment %}
+
 {% assign main_menu_linklist = linklists[section.settings.menu].links %}
 {%- comment -%}User ne theme editor se dropdown se  jo menu select kiya hai (section.settings.menu),us menu ka data Shopify ke linklist object se uthao,aur usay main_menu_linklist variable mein save karo or links Yeh us menu ke actual list of links (items) ko return karta hai, jaise Home, Products, Contact etc. agr user ne main menu select kiya hy to ot agr footer menu select kia hy to usky sary links return kryga{%- endcomment -%}
 
