@@ -1,17 +1,19 @@
 {
-
-"sections":{
-"featured-collection":{
-
-    "type":"featured-collection",
-    "settings":{
-
-        "featured-collection":"all"
-    }
-}
-
-
-},
-"order":["featured-collection"]
-
-}
+    "sections": {
+      "hero-banner": {
+        "type": "hero-banner",
+        "settings": {
+          "background_image": "",
+         
+        }
+      },
+      "featured-collection": {
+        "type": "featured-collection",
+        "settings": {
+          "featured-collection": "all"
+        }
+      }
+    },
+    "order": ["hero-banner", "featured-collection"]
+  }
+  
